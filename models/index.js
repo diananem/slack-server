@@ -1,7 +1,7 @@
 import Sequelize from 'sequelize';
 
-const sequelize = new Sequelize('slack', 'dianka', 'dianka', {
-  dialect: 'postgres'
+const sequelize = new Sequelize('slack', 'dianka', 'postgres', {
+  dialect: 'postgres',
 });
 
 const models = {
