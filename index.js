@@ -6,6 +6,7 @@ import userType from './schema/user';
 import teamType from './schema/team';
 import messageType from './schema/message';
 import channelType from './schema/channel';
+import errorType from './schema/error';
 
 import userResolver from './resolvers/user';
 import teamResolver from './resolvers/team';
@@ -16,7 +17,8 @@ const typesArray = [
   userType,
   teamType,
   messageType,
-  channelType
+  channelType,
+  errorType
 ];
 const resolversArray = [
   userResolver,
