@@ -13,6 +13,9 @@ import teamResolver from './resolvers/team';
 import messageResolver from './resolvers/message';
 import channelResolver from './resolvers/channel';
 
+const SECRET = "dsahvjsblfbf5738yrhu";
+const SECRET2 = "dsahvjsblfbf573wewdqwd";
+
 const typesArray = [
   userType,
   teamType,
@@ -36,7 +39,9 @@ const server = new ApolloServer({
     models,
     user: {
       id: 1,
-    }
+    },
+    SECRET,
+    SECRET2,
   },
 });
 
