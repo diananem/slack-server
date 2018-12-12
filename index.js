@@ -1,36 +1,16 @@
-import { ApolloServer, gql } from 'apollo-server';
-import { mergeTypes, mergeResolvers } from 'merge-graphql-schemas';
+import { ApolloServer, gql } from "apollo-server";
+import { fileLoader, mergeTypes, mergeResolvers } from "merge-graphql-schemas";
+import path from "path";
 
-import models from './models';
-import userType from './schema/user';
-import teamType from './schema/team';
-import messageType from './schema/message';
-import channelType from './schema/channel';
-import errorType from './schema/error';
-
-import userResolver from './resolvers/user';
-import teamResolver from './resolvers/team';
-import messageResolver from './resolvers/message';
-import channelResolver from './resolvers/channel';
+import models from "./models";
 
 const SECRET = "dsahvjsblfbf5738yrhu";
 const SECRET2 = "dsahvjsblfbf573wewdqwd";
 
-const typesArray = [
-  userType,
-  teamType,
-  messageType,
-  channelType,
-  errorType
-];
-const resolversArray = [
-  userResolver,
-  teamResolver,
-  messageResolver,
-  channelResolver
-];
-const typeDefs = mergeTypes(typesArray, { all: true });
-const resolvers = mergeResolvers(resolversArray);
+const typeDefs = mergeTypes(fileLoader(path.join(__dirname, "./schema")));
+const resolvers = mergeResolvers(
+  fileLoader(path.join(__dirname, "./resolvers"))
+);
 
 const server = new ApolloServer({
   typeDefs,
@@ -38,15 +18,15 @@ const server = new ApolloServer({
   context: {
     models,
     user: {
-      id: 1,
+      id: 1
     },
     SECRET,
-    SECRET2,
-  },
+    SECRET2
+  }
 });
 
 models.sequelize.sync().then(() => {
   server.listen({ port: 4000 }, () =>
     console.log(`🚀 Server ready at http://localhost:4000${server.graphqlPath}`)
-  )
-})
+  );
+});
