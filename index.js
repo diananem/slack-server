@@ -1,5 +1,6 @@
 import { ApolloServer, gql } from "apollo-server";
 import { fileLoader, mergeTypes, mergeResolvers } from "merge-graphql-schemas";
+import jwt from "jsonwebtoken";
 import path from "path";
 
 import models from "./models";
@@ -15,13 +16,25 @@ const resolvers = mergeResolvers(
 const server = new ApolloServer({
   typeDefs,
   resolvers,
-  context: {
-    models,
-    user: {
-      id: 1
-    },
-    SECRET,
-    SECRET2
+  context: ({ req }) => {
+    // get the user token from the headers
+    const token = req.headers.authorization || null;
+
+    let user = null;
+    if (token) {
+      try {
+        user = jwt.verify(token.split(" ")[1], SECRET).user;
+      } catch (err) {
+        console.error(err);
+      }
+    }
+
+    return {
+      models,
+      user,
+      SECRET,
+      SECRET2
+    };
   }
 });
 

@@ -1,4 +1,4 @@
-import formatErrors from '../formatErrors';
+import formatErrors from "../formatErrors";
 
 export default {
   Mutation: {
@@ -6,17 +6,15 @@ export default {
       try {
         await models.Team.create({ ...args, owner: user.id });
         return {
-          success: true,
+          success: true
         };
       } catch (err) {
-        console.error(err)
+        // console.error(err);
         return {
           success: false,
-          errors: formatErrors(err)
+          errors: formatErrors(err, models)
         };
       }
     }
-
-
   }
 };

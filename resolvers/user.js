@@ -1,26 +1,28 @@
-import { tryLogin } from '../auth';
-import formatErrors from '../formatErrors';
+import { tryLogin } from "../auth";
+import formatErrors from "../formatErrors";
 
 export default {
   Query: {
-    getUser: (parent, { id }, { models }) => models.User.findOne({ where: { id } }),
-    getAllUsers: (parent, args, { models }) => models.User.findAll(),
+    getUser: (parent, { id }, { models }) =>
+      models.User.findOne({ where: { id } }),
+    getAllUsers: (parent, args, { models }) => models.User.findAll()
   },
   Mutation: {
-    login: (parent, { email, password }, { models, SECRET, SECRET2 }) => tryLogin(email, password, models, SECRET, SECRET2),
+    login: (parent, { email, password }, { models, SECRET, SECRET2 }) =>
+      tryLogin(email, password, models, SECRET, SECRET2),
     register: async (parent, args, { models }) => {
       try {
         const user = await models.User.create(args);
         return {
           success: true,
-          user,
-        }
+          user
+        };
       } catch (err) {
         return {
           success: false,
           errors: formatErrors(err, models)
-        }
+        };
       }
-    },
-  },
+    }
+  }
 };
