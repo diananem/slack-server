@@ -1,19 +1,19 @@
-import Sequelize from 'sequelize';
+import Sequelize from "sequelize";
 
-const sequelize = new Sequelize('slack', 'dianka', 'postgres', {
-  dialect: 'postgres',
+const sequelize = new Sequelize("slack", "dianka", "postgres", {
+  dialect: "postgres",
+  operatorsAliases: Sequelize.Op,
   define: {
-    underscored: true,
+    underscored: true
   }
 });
 
 const models = {
-  User: sequelize.import('./user'),
-  Team: sequelize.import('./team'),
-  Message: sequelize.import('./message'),
-  Channel: sequelize.import('./channel'),
+  User: sequelize.import("./user"),
+  Team: sequelize.import("./team"),
+  Message: sequelize.import("./message"),
+  Channel: sequelize.import("./channel")
 };
-
 
 Object.keys(models).forEach(modelName => {
   if (models[modelName].associate) {
