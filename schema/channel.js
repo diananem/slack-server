@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from "apollo-server";
 
 export default gql`
   type Channel {
@@ -8,7 +8,18 @@ export default gql`
     messages: [Message!]!
     users: [User!]!
   }
+
+  type ChannelResponse {
+    success: Boolean!
+    channel: Channel
+    errors: [Error!]
+  }
+
   type Mutation {
-    createChannel(team_id: Int!, name: String!, public: Boolean=false): Boolean!
+    createChannel(
+      team_id: Int!
+      name: String!
+      public: Boolean = false
+    ): ChannelResponse!
   }
 `;
