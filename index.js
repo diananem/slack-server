@@ -6,7 +6,6 @@ import path from "path";
 import models from "./models";
 
 const SECRET = "dsahvjsblfbf5738yrhu";
-const SECRET2 = "dsahvjsblfbf573wewdqwd";
 
 const typeDefs = mergeTypes(fileLoader(path.join(__dirname, "./schema")));
 const resolvers = mergeResolvers(
@@ -32,8 +31,7 @@ const server = new ApolloServer({
     return {
       models,
       user,
-      SECRET,
-      SECRET2
+      SECRET
     };
   }
 });

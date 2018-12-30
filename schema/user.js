@@ -1,4 +1,4 @@
-import { gql } from 'apollo-server';
+import { gql } from "apollo-server";
 
 export default gql`
   type User {
@@ -20,11 +20,14 @@ export default gql`
   type LoginResponse {
     success: Boolean!
     token: String
-    refreshToken: String
     errors: [Error!]
   }
   type Mutation {
-    register(username: String!, email: String!, password: String!): RegisterResponse!
+    register(
+      username: String!
+      email: String!
+      password: String!
+    ): RegisterResponse!
     login(email: String!, password: String!): LoginResponse!
   }
 `;
