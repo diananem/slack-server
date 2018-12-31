@@ -13,7 +13,8 @@
     "babel-cli": "^6.26.0",
     "babel-preset-env": "^1.7.0",
     "babel-preset-stage-3": "^6.24.1",
-    "nodemon": "^1.18.7"
+    "nodemon": "^1.18.7",
+    "standard": "^12.0.1"
   },
   "dependencies": {
     "apollo-server": "^2.2.5",

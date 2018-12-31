@@ -12,7 +12,7 @@ export default {
     createTeam: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
         try {
-          const response = await models.sequilize.transaction(async () => {
+          const response = await models.sequelize.transaction(async () => {
             const team = await models.Team.create({ ...args, owner: user.id });
             await models.Channel.create({
               name: "general",
@@ -27,7 +27,6 @@ export default {
             team: response
           };
         } catch (err) {
-          // console.error(err);
           return {
             success: false,
             errors: formatErrors(err, models)
