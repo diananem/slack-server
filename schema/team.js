@@ -4,7 +4,7 @@ export default gql`
   type Team {
     id: Int!
     name: String!
-    owner: User!
+    owner: Int!
     members: [User!]!
     channels: [Channel!]!
   }
@@ -16,6 +16,7 @@ export default gql`
 
   type Query {
     allTeams: [Team!]!
+    inviteTeams: [Team!]!
   }
 
   type VoidResponse {
