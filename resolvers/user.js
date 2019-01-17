@@ -1,4 +1,4 @@
-import { tryLogin } from "../auth";
+import { tryLogin, createTokens } from "../auth";
 import formatErrors from "../formatErrors";
 
 export default {
@@ -10,12 +10,13 @@ export default {
   Mutation: {
     login: (parent, { email, password }, { models, SECRET }) =>
       tryLogin(email, password, models, SECRET),
-    register: async (parent, args, { models }) => {
+    register: async (parent, args, { models, SECRET }) => {
       try {
         const user = await models.User.create(args);
         return {
           success: true,
-          user
+          user,
+          token: createTokens(user, SECRET)
         };
       } catch (err) {
         return {
