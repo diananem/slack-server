@@ -38,28 +38,17 @@ const server = new ApolloServer({
     };
   },
   subscriptions: {
-    onConnect: async (connectionParams, webSocket) => {
-      if (connectionParams.token) {
-        let user = null;
+    path: "/",
+    onConnect: async ({ token }, webSocket) => {
+      if (token) {
         try {
-          const payload = jwt.verify(connectionParams.token, SECRET);
-          user = payload.user;
+          const { user } = jwt.verify(token, SECRET);
+          return { models, user };
         } catch (err) {
           console.error(err);
         }
-        if (!user) {
-          throw new Error("Invalid auth token!");
-        }
-        // const member = await models.Member.findOne({
-        //   where: { team_id: 1, user_id: user.id }
-        // });
-        // if (!member) {
-        //   throw new Error("You are not member of the team");
-        // }
-        return true;
       }
-
-      throw new Error("Missing auth token!");
+      return { models };
     }
   }
 });
@@ -70,9 +59,6 @@ models.sequelize.sync().then(() => {
   server.listen({ port: 4000 }, () => {
     console.log(
       `🚀 Server ready at http://localhost:4000${server.graphqlPath}`
-    );
-    console.log(
-      `🚀 Subscriptions ready at ws://localhost:4000${server.subscriptionsPath}`
     );
   });
 });

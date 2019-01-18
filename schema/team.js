@@ -4,9 +4,9 @@ export default gql`
   type Team {
     id: Int!
     name: String!
-    owner: Int!
     members: [User!]!
     channels: [Channel!]!
+    admin: Boolean!
   }
   type CreateTeamResponse {
     success: Boolean!

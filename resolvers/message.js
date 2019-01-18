@@ -1,6 +1,6 @@
 import requiresAuth from "../permissions";
 import { pubsub } from "../index";
-const { withFilter } = require("apollo-server");
+import { withFilter } from "apollo-server";
 
 const MESSAGE_ADDED = "MESSAGE_ADDED";
 

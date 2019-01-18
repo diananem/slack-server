@@ -8,7 +8,7 @@ export default gql`
     teams: [Team!]!
   }
   type Query {
-    getUser(id: Int!): User!
+    getUser: User!
     getAllUsers: [User!]!
   }
   type RegisterResponse {

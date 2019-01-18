@@ -2,32 +2,21 @@ import formatErrors from "../formatErrors";
 import requiresAuth from "../permissions";
 
 export default {
-  Query: {
-    allTeams: requiresAuth.createResolver(
-      async (parent, args, { models, user }) =>
-        models.Team.findAll({ where: { owner: user.id } }, { raw: true })
-    ),
-    inviteTeams: requiresAuth.createResolver(
-      async (parent, args, { models, user }) =>
-        models.sequelize.query(
-          "SELECT * FROM teams JOIN members ON id = team_id WHERE user_id = ?",
-          {
-            replacements: [user.id],
-            model: models.Team
-          }
-        )
-    )
-  },
   Mutation: {
     createTeam: requiresAuth.createResolver(
       async (parent, args, { models, user }) => {
         try {
           const response = await models.sequelize.transaction(async () => {
-            const team = await models.Team.create({ ...args, owner: user.id });
+            const team = await models.Team.create({ ...args });
             await models.Channel.create({
               name: "general",
               public: true,
               team_id: team.id
+            });
+            await models.Member.create({
+              team_id: team.id,
+              user_id: user.id,
+              admin: true
             });
             return team;
           });
@@ -47,20 +36,20 @@ export default {
     addTeamMember: requiresAuth.createResolver(
       async (parent, { email, team_id }, { models, user }) => {
         try {
-          const teamPromise = await models.Team.findOne(
-            { where: { id: team_id } },
+          const memberPromise = await models.Member.findOne(
+            { where: { team_id, user_id: user.id } },
             { raw: true }
           );
           const userToAddPromise = await models.User.findOne(
             { where: { email } },
             { raw: true }
           );
-          const [team, userToAdd] = await Promise.all([
-            teamPromise,
+          const [member, userToAdd] = await Promise.all([
+            memberPromise,
             userToAddPromise
           ]);
 
-          if (team.owner !== user.id) {
+          if (!member.admin) {
             return {
               success: false,
               errors: [
