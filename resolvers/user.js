@@ -18,7 +18,9 @@ export default {
     getAllUsers: (parent, args, { models }) => models.User.findAll(),
     getUser: requiresAuth.createResolver((parent, args, { models, user }) =>
       models.User.findOne({ where: { id: user.id } })
-    )
+    ),
+    getDirectMessageUser: (parent, { user_id }, { models }) =>
+      models.User.findOne({ where: { id: user_id } })
   },
   Mutation: {
     login: (parent, { email, password }, { models, SECRET }) =>

@@ -4,7 +4,7 @@ export default gql`
   type Team {
     id: Int!
     name: String!
-    members: [User!]!
+    directMessageMembers: [User!]!
     channels: [Channel!]!
     admin: Boolean!
   }
@@ -17,6 +17,7 @@ export default gql`
   type Query {
     allTeams: [Team!]!
     inviteTeams: [Team!]!
+    getTeamMembers(team_id: Int!): [User!]!
   }
 
   type VoidResponse {

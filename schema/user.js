@@ -10,6 +10,7 @@ export default gql`
   type Query {
     getUser: User!
     getAllUsers: [User!]!
+    getDirectMessageUser(user_id: Int!): User
   }
   type RegisterResponse {
     success: Boolean!
