@@ -19,4 +19,7 @@ export default gql`
       team_id: Int!
     ): Boolean!
   }
+  type Subscription {
+    directMessageAdded(team_id: Int!, user_id: Int!): DirectMessage!
+  }
 `;

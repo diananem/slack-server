@@ -1,6 +1,8 @@
 import requiresAuth from "../permissions";
+import { pubsub } from "../index";
+import { withFilter } from "apollo-server";
 
-const MESSAGE_ADDED = "MESSAGE_ADDED";
+const DIRECT_MESSAGE_ADDED = "DIRECT_MESSAGE_ADDED";
 
 export default {
   DirectMessage: {
@@ -48,6 +50,18 @@ export default {
             sender_id: user.id
           });
 
+          pubsub.publish(`${DIRECT_MESSAGE_ADDED}-${args.team_id}`, {
+            team_id: args.team_id,
+            sender_id: user.id,
+            receiver_id: args.receiver_id,
+            directMessageAdded: {
+              ...directMessage.dataValues,
+              sender: {
+                username: user.username
+              }
+            }
+          });
+
           return true;
         } catch (err) {
           console.error(err);
@@ -55,5 +69,22 @@ export default {
         }
       }
     )
+  },
+  Subscription: {
+    directMessageAdded: {
+      subscribe: withFilter(
+        (root, args) =>
+          pubsub.asyncIterator(`${DIRECT_MESSAGE_ADDED}-${args.team_id}`),
+        (payload, variables, { user }) => {
+          return (
+            payload.directMessageAdded.team_id === variables.team_id &&
+            ((payload.directMessageAdded.sender_id === user.id &&
+              payload.directMessageAdded.receiver_id === variables.user_id) ||
+              (payload.directMessageAdded.sender_id === variables.user_id &&
+                payload.directMessageAdded.receiver_id === user.id))
+          );
+        }
+      )
+    }
   }
 };
